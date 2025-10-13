@@ -14,8 +14,6 @@ def get_reviews_for_restaurant(restaurant_id: str):
         raise HTTPException(status_code=400, detail="Invalid restaurant ID")
 
     reviews = get_reviews_by_restaurant_id(obj_id)
-
-    print(reviews)
     
     if not reviews:
         return {"message": "No reviews found for this restaurant"}

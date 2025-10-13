@@ -23,7 +23,6 @@ async def root(request: Request):
 
 @app.get("/leaderboard")
 async def send_leaderboard(page : int = 0):
-    print(page)
     leaderboard = get_leaderboard()
     if len(leaderboard) > (page + 1) * 10:
         leaderboard = leaderboard[page * 10 : (page + 1) * 10]

@@ -56,29 +56,52 @@ def search_restaurants(name: str):
     cursor = db.restaurants.find({"name": {"$regex": name, "$options": "i"}}).limit(5)
     return [{"_id": str(r["_id"]), "name": r["name"]} for r in cursor]
 
+from redis_manager import redis_client
+import json
+
 def get_leaderboard():
-    restaurants = get_restaurants()  # Lista de restaurantes desde Mongo
-    reviews = get_reviews()          # Lista de reviews desde Mongo
-    
-    # Agrupamos las reviews por restaurant_id
-    reviews_by_restaurant = defaultdict(list)
-    for review in reviews:
-        reviews_by_restaurant[review["restaurant_id"]].append(review)
+    cached_leaderboard = redis_client.get("leaderboard")
+    if cached_leaderboard:
+        return json.loads(cached_leaderboard)
 
-    leaderboard = []
-    for restaurant in restaurants:
-        rest_id = restaurant["_id"]
-        pos = sum(1 for r in reviews_by_restaurant.get(rest_id, []) if r["sentiment"] == "positive")
-        neg = sum(1 for r in reviews_by_restaurant.get(rest_id, []) if r["sentiment"] == "negative")
-        
-        leaderboard.append({
-            "name": restaurant["name"],
-            "positive_reviews": pos,
-            "negative_reviews": neg,
-            "score": pos - neg
-        })
-
-    leaderboard.sort(key=lambda x: x["score"], reverse=True)
+    pipeline = [
+        {
+            "$group": {
+                "_id": "$restaurant_id",
+                "positive_reviews": {
+                    "$sum": {
+                        "$cond": [{"$eq": ["$sentiment", "positive"]}, 1, 0]
+                    }
+                },
+                "negative_reviews": {
+                    "$sum": {
+                        "$cond": [{"$eq": ["$sentiment", "negative"]}, 1, 0]
+                    }
+                },
+            },
+        },
+        {
+            "$lookup": {
+                "from": "restaurants",
+                "localField": "_id",
+                "foreignField": "_id",
+                "as": "restaurant",
+            }
+        },
+        {"$unwind": "$restaurant"},
+        {
+            "$project": {
+                "_id": 0, # Exclude the default _id
+                "name": "$restaurant.name",
+                "positive_reviews": "$positive_reviews",
+                "negative_reviews": "$negative_reviews",
+                "score": {"$subtract": ["$positive_reviews", "$negative_reviews"]},
+            }
+        },
+        {"$sort": {"score": -1}},
+    ]
+    leaderboard = list(reviews_collection.aggregate(pipeline))
+    redis_client.set("leaderboard", json.dumps(leaderboard), ex=3600)
     return leaderboard
 
 def get_reviews_by_restaurant_id(restaurant_id: ObjectId):

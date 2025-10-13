@@ -4,19 +4,16 @@ from database import get_restaurant_by_id, save_review
 from datetime import datetime
 from bson import ObjectId
 from npl_utils import analyze_sentiment
+from redis_manager import redis_client
 
 reviews_router = APIRouter(prefix="/reviews", tags=["Reviews"])
 
 @reviews_router.post("/", response_model=ReviewOut)
 def add_review(review: ReviewIn):
-    print("Ingreso al add review")
-    print(review.restaurant_id)
     restaurant = get_restaurant_by_id(review.restaurant_id)
     if not restaurant:
         raise HTTPException(status_code=404, detail="Restaurante no encontrado")
-    print(restaurant)
     sentiment = analyze_sentiment(review.text)
-    print(sentiment)
     new_review = {
         "restaurant_id": ObjectId(review.restaurant_id),
         "author_name": review.author_name,
@@ -27,6 +24,7 @@ def add_review(review: ReviewIn):
     }
 
     save_review(new_review)
+    redis_client.delete("leaderboard")
 
     #update_leaderboard(str(review.restaurant_id), sentiment)
     return {"sentiment": sentiment}
