@@ -1,10 +1,10 @@
 from fastapi import APIRouter, HTTPException
-from schemas import ReviewIn, ReviewOut
-from database import get_restaurant_by_id, save_review
+from app.schemas import ReviewIn, ReviewOut
+from app.database import get_restaurant_by_id, save_review
 from datetime import datetime
 from bson import ObjectId
-from npl_utils import analyze_sentiment
-from redis_manager import redis_client
+from app.npl_utils import analyze_sentiment
+from app.redis_manager import redis_client
 
 reviews_router = APIRouter(prefix="/reviews", tags=["Reviews"])
 

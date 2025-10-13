@@ -1,10 +1,12 @@
 from pymongo import MongoClient, DESCENDING
-from hashing import hash_password, verify_password
+from app.hashing import hash_password, verify_password
 import os
 from dotenv import load_dotenv
-from npl_utils import analyze_sentiment
+from app.npl_utils import analyze_sentiment
 from collections import defaultdict
 from bson import ObjectId
+from app.redis_manager import redis_client
+import json
 
 load_dotenv()
 
@@ -55,9 +57,6 @@ def check_credentials(email, password):
 def search_restaurants(name: str):
     cursor = db.restaurants.find({"name": {"$regex": name, "$options": "i"}}).limit(5)
     return [{"_id": str(r["_id"]), "name": r["name"]} for r in cursor]
-
-from redis_manager import redis_client
-import json
 
 def get_leaderboard():
     cached_leaderboard = redis_client.get("leaderboard")

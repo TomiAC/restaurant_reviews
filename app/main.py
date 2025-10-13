@@ -1,12 +1,12 @@
 from fastapi import FastAPI, HTTPException, Request
-from schemas import ReviewIn, ReviewOut, LeaderboardPage
-from database import get_leaderboard
+from app.schemas import ReviewIn, ReviewOut, LeaderboardPage
+from app.database import get_leaderboard
 from bson import ObjectId
-from npl_utils import analyze_sentiment
+from app.npl_utils import analyze_sentiment
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from routers.restaurant import restaurants_router
-from routers.reviews import reviews_router
+from app.routers.restaurant import restaurants_router
+from app.routers.reviews import reviews_router
 
 app = FastAPI()
 

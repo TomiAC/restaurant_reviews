@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Depends, HTTPException, APIRouter
-from database import get_reviews_by_restaurant_id, search_restaurants
-from schemas import Restaurant
+from app.database import get_reviews_by_restaurant_id, search_restaurants
+from app.schemas import Restaurant
 from bson import ObjectId
-from utils import serialize_review
+from app.utils import serialize_review
 
 restaurants_router = APIRouter(prefix="/restaurants", tags=["Restaurants"])
 
