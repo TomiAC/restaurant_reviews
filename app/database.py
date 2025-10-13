@@ -1,9 +1,7 @@
 from pymongo import MongoClient, DESCENDING
-from app.hashing import hash_password, verify_password
+from app.hashing import verify_password
 import os
 from dotenv import load_dotenv
-from app.npl_utils import analyze_sentiment
-from collections import defaultdict
 from bson import ObjectId
 from app.redis_manager import redis_client
 import json

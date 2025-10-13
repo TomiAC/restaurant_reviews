@@ -1,10 +1,14 @@
-from npl_utils import analyze_sentiment
+from app.npl_utils import analyze_sentiment
 from pymongo import MongoClient, InsertOne
 import csv
 from itertools import islice
 from datetime import datetime
+from dotenv import load_dotenv
+import os
 
-MONGO_URI = "mongodb+srv://tomicar200894:qajdkSgIXGNj996O@cluster0.icsvrs1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+load_dotenv()
+
+MONGO_URI = os.getenv("MONGODB_URI")
 
 client = MongoClient(MONGO_URI)
 db = client["restaurant_reviews"]
