@@ -53,7 +53,7 @@ def check_credentials(email, password):
     return False
 
 def search_restaurants(name: str):
-    cursor = db.restaurants.find({"name": {"$regex": name, "$options": "i"}}).limit(5)
+    cursor = restaurants_collection.find({"name": {"$regex": name, "$options": "i"}}).limit(5)
     return [{"_id": str(r["_id"]), "name": r["name"]} for r in cursor]
 
 def get_leaderboard():
