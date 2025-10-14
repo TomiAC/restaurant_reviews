@@ -39,3 +39,47 @@ Los datos cargados fueron obtenidos del siguiente dataset: https://www.kaggle.co
 
 ## Contacto
 www.linkedin.com/in/ta-cardozo
+
+---
+
+# 🍽️ Restaurant Review API with NLP & Leaderboard (English)
+
+This is a backend project built with **FastAPI**, which allows users to add restaurant reviews. It uses **Natural Language Processing (NLP)** to automatically classify reviews as positive or negative and maintains a **live ranking** of restaurants based on these reviews.
+
+---
+
+## 🚀 Technologies Used
+
+- 🐍 Python 3.10+
+- ⚡ [FastAPI](https://fastapi.tiangolo.com/) – Modern and fast web framework
+- 🍃 [MongoDB](https://www.mongodb.com/) – NoSQL database
+- 📚 [Pymongo](https://pymongo.readthedocs.io/en/stable/) – MongoDB client for Python
+- 💬 [TextBlob](https://textblob.readthedocs.io/en/dev/) – NLP library for sentiment analysis
+- 🖼️ Jinja2 – For rendering HTML from the backend
+- 🧪 HTML, JavaScript, CSS – Simple interface to display the ranking and add reviews
+
+## 📊 Main Features
+📥 Add Reviews: Users can search for a restaurant and submit a review from the browser.
+
+🤖 Sentiment Analysis: Each review is automatically classified as positive or negative using TextBlob.
+
+🏆 Leaderboard: A ranking of restaurants is displayed based on the number of positive reviews minus the negative ones.
+
+🔍 Restaurant Search: To facilitate adding reviews to specific restaurants.
+
+🗃️ Initial Load: Data can be imported from a CSV file to preload restaurants and reviews.
+
+##🧪 Main Endpoints
+| Method | Path                           | Description                              |
+| ------ | ------------------------------ | ---------------------------------------- |
+| GET    | `/`                            | HTML page with ranking and form          |
+| POST   | `/review`                      | Add a new review with NLP analysis       |
+| GET    | `/leaderboard`                 | Get restaurant ranking                   |
+| GET    | `/restaurants/search?name=...` | Search for a restaurant by name          |
+| GET    | `/restaurants/{id}/reviews`    | View reviews for a specific restaurant   |
+
+## Restaurant Reviews Dataset
+The data loaded was obtained from the following dataset: https://www.kaggle.com/datasets/denizbilginn/google-maps-restaurant-reviews .
+
+## Contact
+www.linkedin.com/in/ta-cardozo
