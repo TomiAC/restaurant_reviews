@@ -5,10 +5,13 @@ from bson import ObjectId
 from app.npl_utils import analyze_sentiment
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from app.routers.restaurant import restaurants_router
 from app.routers.reviews import reviews_router
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(reviews_router)
 app.include_router(restaurants_router)
